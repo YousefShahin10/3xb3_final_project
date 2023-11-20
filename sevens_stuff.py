@@ -1,4 +1,4 @@
-import min_heap2
+from min_heap import MinHeap, Element
 import random
 
 class DirectedWeightedGraph:
@@ -35,12 +35,12 @@ class DirectedWeightedGraph:
 def dijkstra(G, source):
     pred = {} #Predecessor dictionary. Isn't returned, but here for your understanding
     dist = {} #Distance dictionary
-    Q = min_heap.MinHeap([])
+    Q = MinHeap([])
     nodes = list(G.adj.keys())
 
     #Initialize priority queue/heap and distances
     for node in nodes:
-        Q.insert(min_heap.Element(node, float("inf")))
+        Q.insert(Element(node, float("inf")))
         dist[node] = float("inf")
     Q.decrease_key(source, 0)
 
@@ -114,3 +114,17 @@ def init_d(G):
                 d[i][j] = G.w(i, j)
         d[i][i] = 0
     return d
+
+
+
+def experiment1(n):
+    #Running the experiment on Dikstra's and bellman for number of nodes
+    G = create_random_complete_graph(n,25)
+    print("doning")
+    bellmanDist = bellman_ford(G, 0)
+    dijkstraDist = dijkstra(G, 0)
+    print(bellmanDist)
+    print(dijkstraDist)
+    
+
+experiment1(6)
