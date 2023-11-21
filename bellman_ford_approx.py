@@ -1,4 +1,3 @@
-from min_heap2 import MinHeap as min_heap
 from final_project_part1 import DirectedWeightedGraph
 
 def bellman_ford(G, source, k):
@@ -13,13 +12,12 @@ def bellman_ford(G, source, k):
     dist[source] = 0
 
     #Meat of the algorithm
-    for _ in range(G.number_of_nodes()):
-        for node in nodes:
-            for neighbour in G.adj[node]:
-                if dist[neighbour] > dist[node] + G.w(node, neighbour) and relax_count[node] < k:
-                    pred[neighbour] = node
-                    dist[neighbour] = dist[node] + G.w(node, neighbour)
-                    relax_count[neighbour] += 1
+    for node in nodes:
+        for neighbour in G.adj[node]:
+            if dist[neighbour] > dist[node] + G.w(node, neighbour) and relax_count[node] < k:
+                pred[neighbour] = node
+                dist[neighbour] = dist[node] + G.w(node, neighbour)
+                relax_count[neighbour] += 1
     return dist
 
 test_graph = DirectedWeightedGraph()
@@ -32,13 +30,5 @@ test_graph.add_edge(1,2,3)
 test_graph.add_edge(2,3,4)
 test_graph.add_edge(3,0,5)
 
-print(bellman_ford(test_graph, 0, 1))
+print(bellman_ford(test_graph, 0, 10))
 
-'''
-graph = {
-    0: {1: 1, 2: 4},
-    1: {0: 1, 2: 2, 3: 5},
-    2: {0: 4, 1: 2, 3: 1},
-    3: {1: 5, 2: 1}
-}
-'''
