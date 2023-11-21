@@ -1,5 +1,8 @@
 from min_heap import MinHeap, Element
 import random
+import timeit
+import matplotlib.pyplot as plt
+
 
 class DirectedWeightedGraph:
 
@@ -68,12 +71,12 @@ def bellman_ford(G, source):
     dist[source] = 0
 
     #Meat of the algorithm
-    for _ in range(G.number_of_nodes()):
-        for node in nodes:
+    for node in nodes:
             for neighbour in G.adj[node]:
                 if dist[neighbour] > dist[node] + G.w(node, neighbour):
                     dist[neighbour] = dist[node] + G.w(node, neighbour)
                     pred[neighbour] = node
+       
     return dist
 
 
@@ -117,14 +120,31 @@ def init_d(G):
 
 
 
-def experiment1(n):
+def experiment1():
+    dijkstraTimes = []
+    bellmanTimes = []
     #Running the experiment on Dikstra's and bellman for number of nodes
-    G = create_random_complete_graph(n,25)
     print("doning")
-    bellmanDist = bellman_ford(G, 0)
-    dijkstraDist = dijkstra(G, 0)
-    print(bellmanDist)
-    print(dijkstraDist)
+    for i in range(10,30):
+      G = create_random_complete_graph(i,25) 
+      start = timeit.default_timer()
+      dijkstraDist = dijkstra(G, 0) 
+      dijkstraTimes.append(timeit.default_timer() - start)
+      
+      start = timeit.default_timer()
+      bellmanDist = bellman_ford(G, 0)
+      bellmanTimes.append(timeit.default_timer() - start)
+
+      
+    
+    plt.plot(dijkstraTimes, label="Dijkstra Times")
+    plt.plot(bellmanTimes, label="Bellman Times")
+
+    plt.xlabel('Number of nodes````')
+    plt.ylabel('Runtime')
+    plt.title('Number of Nodes vs Runtime')
+    plt.legend(loc=1)
+    plt.show()
     
 
-experiment1(6)
+experiment1()
