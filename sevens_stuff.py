@@ -118,34 +118,6 @@ def init_d(G):
         d[i][i] = 0
     return d
 
-
-
-def experiment1():
-    dijkstraTimes = []
-    bellmanTimes = []
-    #Running the experiment on Dikstra's and bellman for number of nodes
-    print("doning")
-    for i in range(10,30):
-      G = create_random_complete_graph(i,25) 
-      start = timeit.default_timer()
-      dijkstraDist = dijkstra(G, 0) 
-      dijkstraTimes.append(timeit.default_timer() - start)
-      
-      start = timeit.default_timer()
-      bellmanDist = bellman_ford(G, 0)
-      bellmanTimes.append(timeit.default_timer() - start)
-
-      
-    
-    plt.plot(dijkstraTimes, label="Dijkstra Times")
-    plt.plot(bellmanTimes, label="Bellman Times")
-
-    plt.xlabel('Number of nodes````')
-    plt.ylabel('Runtime')
-    plt.title('Number of Nodes vs Runtime')
-    plt.legend(loc=1)
-    plt.show()
-    
 def new_create_random_complete_graph(node_num, edge_num, upper):
     G = DirectedWeightedGraph()
     for i in range(node_num):
@@ -156,37 +128,7 @@ def new_create_random_complete_graph(node_num, edge_num, upper):
                 G.add_edge(i,j,random.randint(1,upper))
     return G
 
-def experiment2(node_num, max_ratio):
-    dijkstraTimes = []
-    bellmanTimes = []
-
-    print("doning")
-    for i in range(max_ratio):
-        edge_num = i
-        upper = 25
-        G = new_create_random_complete_graph(node_num, edge_num, upper)
-
-        start = timeit.default_timer()
-        dijkstraDist = dijkstra(G, 0)
-        dijkstraTimes.append(timeit.default_timer() - start)
-
-        start = timeit.default_timer()
-        bellmanDist = bellman_ford(G, 0)
-        bellmanTimes.append(timeit.default_timer() - start)
-
-    plt.plot(dijkstraTimes, label="Dijkstra Times")
-    plt.plot(bellmanTimes, label="Bellman Times")
-
-    plt.xlabel('Edge to Node Ratio')
-    plt.ylabel('Runtime')
-    plt.title('Number of Nodes vs Runtime')
-    plt.legend(loc=1)
-    plt.show()
-
-
-# experiment2(30,30)
-
-
+# ========= Part 2: AStar Implementation =====================
 
 def aStar(G, s, d, h):
     pred = {} #Predecessor dictionary. Isn't returned, but here for your understanding
@@ -218,6 +160,59 @@ def aStar(G, s, d, h):
                 pred[neighbour] = current_node
     return pred, []
 
+# ==================== Experiments ===============
+
+# ==================== Part 1 =========================
+def experiment1():
+    dijkstraTimes = []
+    bellmanTimes = []
+    #Running the experiment on Dikstra's and bellman for number of nodes
+    print("doning")
+    for i in range(10,30):
+      G = create_random_complete_graph(i,25) 
+      start = timeit.default_timer()
+      dijkstraDist = dijkstra(G, 0) 
+      dijkstraTimes.append(timeit.default_timer() - start)
+      start = timeit.default_timer()
+      bellmanDist = bellman_ford(G, 0)
+      bellmanTimes.append(timeit.default_timer() - start)
+    plt.plot(dijkstraTimes, label="Dijkstra Times")
+    plt.plot(bellmanTimes, label="Bellman Times")
+    plt.xlabel('Number of nodes````')
+    plt.ylabel('Runtime')
+    plt.title('Number of Nodes vs Runtime')
+    plt.legend(loc=1)
+    plt.show()
+    
+def experiment2(node_num, max_ratio):
+    dijkstraTimes = []
+    bellmanTimes = []
+    for i in range(max_ratio):
+        edge_num = i
+        upper = 25
+        G = new_create_random_complete_graph(node_num, edge_num, upper)
+
+        start = timeit.default_timer()
+        dijkstraDist = dijkstra(G, 0)
+        dijkstraTimes.append(timeit.default_timer() - start)
+
+        start = timeit.default_timer()
+        bellmanDist = bellman_ford(G, 0)
+        bellmanTimes.append(timeit.default_timer() - start)
+
+    plt.plot(dijkstraTimes, label="Dijkstra Times")
+    plt.plot(bellmanTimes, label="Bellman Times")
+    plt.xlabel('Edge to Node Ratio')
+    plt.ylabel('Runtime')
+    plt.title('Number of Nodes vs Runtime')
+    plt.legend(loc=1)
+    plt.show()
+
+
+# experiment2(30,30)
+
+
+# ========== Part 2: testing astar ============
 
 def astarTest():
     G = DirectedWeightedGraph()
@@ -235,4 +230,5 @@ def astarTest():
     print("Shortest Path:", path)
     print("Dijkstra Distances:",dijkstra(G, 0))
 
-astarTest()
+# astarTest()
+
