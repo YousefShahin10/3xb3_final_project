@@ -184,7 +184,7 @@ def experiment2(node_num, max_ratio):
     plt.show()
 
 
-experiment2(30,30)
+# experiment2(30,30)
 
 
 
@@ -205,21 +205,34 @@ def aStar(G, s, d, h):
         current_element = Q.extract_min()
         current_node = current_element.value
         dist[current_node] = current_element.key
-
         if current_node == d:
             path = []
             while current_node is not None:
                 path.insert(0, current_node)
                 current_node = pred.get(current_node)
             return pred, path
-
-
         for neighbour in G.adj[current_node]:
-            tentative_dist = dist[current_node] + G.w(current_node, neighbour) + h[neighbour]
-            if tentative_dist < dist[neighbour]:
-                Q.decrease_key(neighbour, tentative_dist)
-                dist[neighbour] = tentative_dist
+            if dist[current_node] + G.w(current_node, neighbour) + h[neighbour] < dist[neighbour]:
+                Q.decrease_key(neighbour, dist[current_node] + G.w(current_node, neighbour) + h[neighbour])
+                dist[neighbour] = dist[current_node] + G.w(current_node, neighbour) + h[neighbour]
                 pred[neighbour] = current_node
-
-    # If the goal is not reached, return an empty path
     return pred, []
+
+
+def astarTest():
+    G = DirectedWeightedGraph()
+    for i in range(5):
+        G.add_node(i)
+    G.add_edge(0,1,2)
+    G.add_edge(0,2,2)
+    G.add_edge(0,3,3)
+    G.add_edge(1,4,2)
+    G.add_edge(2,4,1)
+    G.add_edge(3,4,5)
+    heuristic = {0:8,1:2,2:5,3:4,4:0}
+    pred, path = aStar(G, 0, 4, heuristic)
+    print("Predecessor Dictionary:", pred)
+    print("Shortest Path:", path)
+    print("Dijkstra Distances:",dijkstra(G, 0))
+
+astarTest()
