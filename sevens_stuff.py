@@ -185,3 +185,41 @@ def experiment2(node_num, max_ratio):
 
 
 experiment2(30,30)
+
+
+
+def aStar(G, s, d, h):
+    pred = {} #Predecessor dictionary. Isn't returned, but here for your understanding
+    dist = {} #Distance dictionary
+    Q = MinHeap([])
+    nodes = list(G.adj.keys())
+
+    #Initialize priority queue/heap and distances
+    for node in nodes:
+        Q.insert(Element(node, float("inf")))
+        dist[node] = float("inf")
+    Q.decrease_key(s, 0)
+
+    #Meat of the algorithm
+    while not Q.is_empty():
+        current_element = Q.extract_min()
+        current_node = current_element.value
+        dist[current_node] = current_element.key
+
+        if current_node == d:
+            path = []
+            while current_node is not None:
+                path.insert(0, current_node)
+                current_node = pred.get(current_node)
+            return pred, path
+
+
+        for neighbour in G.adj[current_node]:
+            tentative_dist = dist[current_node] + G.w(current_node, neighbour) + h[neighbour]
+            if tentative_dist < dist[neighbour]:
+                Q.decrease_key(neighbour, tentative_dist)
+                dist[neighbour] = tentative_dist
+                pred[neighbour] = current_node
+
+    # If the goal is not reached, return an empty path
+    return pred, []
