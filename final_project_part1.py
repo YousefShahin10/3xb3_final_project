@@ -254,6 +254,30 @@ def experiment3(approx_num):
     plt.legend(loc=1)
     plt.show()
 
-experiment4()
-# experiment1()
+def experiment4(approx_num):
+    dijkstraTotalDist = []
+    bellmanTotalDist = []
+
+    for k in range(approx_num):
+        upper = 25
+        node_num = 30
+        G = create_random_complete_graph(node_num, upper)
+
+
+        dijkstraDist = new_dijkstra(G, 0, k)
+        dijkstraTotalDist.append(total_dist(dijkstraDist))
+
+
+        bellmanDist = new_bellman_ford(G, 0, k)
+        bellmanTotalDist.append(total_dist(bellmanDist))
+
+    plt.plot(dijkstraTotalDist, label="Dijkstra Distances")
+    plt.plot(bellmanTotalDist, label="Bellman Distances")
+
+    plt.xlabel('Edge to Node Ratio')
+    plt.ylabel('Distance')
+    plt.title('Number of Nodes vs Total Shortest Path Distances of Dijkstra and Bellman')
+    plt.legend(loc=1)
+    plt.show()
+experiment4(50)
 # experiment2(30,30)
