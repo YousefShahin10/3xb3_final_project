@@ -224,11 +224,16 @@ def astarTest():
     G.add_edge(1,4,2)
     G.add_edge(2,4,1)
     G.add_edge(3,4,5)
-    heuristic = {0:8,1:2,2:5,3:4,4:0}
+    heuristic = {'0':8,1:2,2:5,3:4,4:0}
     pred, path = aStar(G, 0, 4, heuristic)
     print("Predecessor Dictionary:", pred)
     print("Shortest Path:", path)
     print("Dijkstra Distances:",dijkstra(G, 0))
 
-# astarTest()
+astarTest()
+
+
+# ======= Part 3: British Transit ============
+
+
 
