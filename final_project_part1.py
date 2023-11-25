@@ -58,7 +58,32 @@ def dijkstra(G, source):
                 pred[neighbour] = current_node
     return dist
 
+def new_dijkstra(G, source, k):
+    pred = {}  # Predecessor dictionary. Isn't returned, but here for your understanding
+    dist = {}  # Distance dictionary
+    relax_count = {}  # Counter for the number of relaxations for each node
+    Q = min_heap.MinHeap([])
+    nodes = list(G.adj.keys())
 
+    # Initialize priority queue/heap, distances, and relaxation counters
+    for node in nodes:
+        Q.insert(min_heap.Element(node, float("inf")))
+        dist[node] = float("inf")
+        relax_count[node] = 0
+    Q.decrease_key(source, 0)
+
+    # Meat of the algorithm
+    while not Q.is_empty():
+        current_element = Q.extract_min()
+        current_node = current_element.value
+        dist[current_node] = current_element.key
+        for neighbour in G.adj[current_node]:
+            if relax_count[current_node] < k and dist[current_node] + G.w(current_node, neighbour) < dist[neighbour]:
+                Q.decrease_key(neighbour, dist[current_node] + G.w(current_node, neighbour))
+                dist[neighbour] = dist[current_node] + G.w(current_node, neighbour)
+                pred[neighbour] = current_node
+                relax_count[neighbour] += 1
+    return dist
 def bellman_ford(G, source):
     pred = {} #Predecessor dictionary. Isn't returned, but here for your understanding
     dist = {} #Distance dictionary
@@ -78,6 +103,25 @@ def bellman_ford(G, source):
                     pred[neighbour] = node
     return dist
 
+def new_bellman_ford(G, source, k):
+    pred = {} #Predecessor dictionary. Isn't returned, but here for your understanding
+    dist = {} #Distance dictionary
+    nodes = list(G.adj.keys())
+    relax_count = {}
+    #Initialize distances
+    for node in nodes:
+        dist[node] = float("inf")
+        relax_count[node] = 0
+    dist[source] = 0
+
+    #Meat of the algorithm
+    for node in nodes:
+        for neighbour in G.adj[node]:
+            if dist[neighbour] > dist[node] + G.w(node, neighbour) and relax_count[node] < k:
+                pred[neighbour] = node
+                dist[neighbour] = dist[node] + G.w(node, neighbour)
+                relax_count[neighbour] += 1
+    return dist
 
 def total_dist(dist):
     total = 0
@@ -94,15 +138,17 @@ def create_random_complete_graph(n,upper):
             if i != j:
                 G.add_edge(i,j,random.randint(1,upper))
     return G
-
 def new_create_random_complete_graph(node_num, edge_num, upper):
     G = DirectedWeightedGraph()
     for i in range(node_num):
         G.add_node(i)
     for i in range(node_num):
         for j in range(edge_num):
-            if i != j:
-                G.add_edge(i,j,random.randint(1,upper))
+            dest = random.randint(edge_num)
+            if i != dest:
+                rand = random.randint(1, upper)
+                G.add_edge(i, dest, rand)
+                print(i, ", ", dest, ", ", rand)
     return G
 
 
@@ -146,7 +192,7 @@ def experiment1():
     plt.plot(dijkstraTimes, label="Dijkstra Times")
     plt.plot(bellmanTimes, label="Bellman Times")
 
-    plt.xlabel('Number of nodes````')
+    plt.xlabel('Number of nodes')
     plt.ylabel('Runtime')
     plt.title('Number of Nodes vs Runtime')
     plt.legend(loc=1)
@@ -180,4 +226,58 @@ def experiment2(node_num, max_ratio):
     plt.show()
 
 
-experiment2(30,30)
+def experiment3(approx_num):
+    dijkstraTimes = []
+    bellmanTimes = []
+
+    print("doning")
+    for k in range(approx_num):
+        upper = 25
+        node_num = 30
+        G = create_random_complete_graph(node_num, upper)
+
+        start = timeit.default_timer()
+        dijkstraDist = new_dijkstra(G, 0, k)
+        dijkstraTimes.append(timeit.default_timer() - start)
+
+        start = timeit.default_timer()
+
+        bellmanDist = new_bellman_ford(G, 0, k)
+        bellmanTimes.append(timeit.default_timer() - start)
+
+    plt.plot(dijkstraTimes, label="Dijkstra Times")
+    plt.plot(bellmanTimes, label="Bellman Times")
+
+    plt.xlabel('Edge to Node Ratio')
+    plt.ylabel('Runtime')
+    plt.title('Number of Nodes vs Runtime')
+    plt.legend(loc=1)
+    plt.show()
+
+def experiment4(approx_num):
+    dijkstraTotalDist = []
+    bellmanTotalDist = []
+
+    for k in range(approx_num):
+        upper = 25
+        node_num = 30
+        G = create_random_complete_graph(node_num, upper)
+
+
+        dijkstraDist = new_dijkstra(G, 0, k)
+        dijkstraTotalDist.append(total_dist(dijkstraDist))
+
+
+        bellmanDist = new_bellman_ford(G, 0, k)
+        bellmanTotalDist.append(total_dist(bellmanDist))
+
+    plt.plot(dijkstraTotalDist, label="Dijkstra Distances")
+    plt.plot(bellmanTotalDist, label="Bellman Distances")
+
+    plt.xlabel('Edge to Node Ratio')
+    plt.ylabel('Distance')
+    plt.title('Number of Nodes vs Total Shortest Path Distances of Dijkstra and Bellman')
+    plt.legend(loc=1)
+    plt.show()
+experiment4(50)
+# experiment2(30,30)

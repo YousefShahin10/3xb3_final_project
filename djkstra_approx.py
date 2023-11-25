@@ -16,6 +16,7 @@ def dijkstra(G, source, k):
 
     # Meat of the algorithm
     while not Q.is_empty():
+        print(pred)
         current_element = Q.extract_min()
         current_node = current_element.value
         dist[current_node] = current_element.key
