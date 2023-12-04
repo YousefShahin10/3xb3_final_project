@@ -34,6 +34,12 @@ class DirectedWeightedGraph:
     def number_of_nodes(self):
         return len(self.adj)
 
+def print_graph(graph):
+    for node in graph.adj:
+        print(f"Node {node}:")
+        for neighbor in graph.adj[node]:
+            weight = graph.weights[(node, neighbor)]
+            print(f"  -> {neighbor} (Weight: {weight})")
 
 def dijkstra(G, source):
     pred = {} #Predecessor dictionary. Isn't returned, but here for your understanding
@@ -230,10 +236,8 @@ def astarTest():
     print("Shortest Path:", path)
     print("Dijkstra Distances:",dijkstra(G, 0))
 
-astarTest()
+# astarTest()
 
 
 # ======= Part 3: British Transit ============
-
-
 
