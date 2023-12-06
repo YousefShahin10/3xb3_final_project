@@ -235,8 +235,8 @@ def astarTest():
     print("Predecessor Dictionary:", pred)
     print("Shortest Path:", path)
     print("Dijkstra Distances:",dijkstra(G, 0))
-
-# astarTest()
+    print_graph(G)
+astarTest()
 
 
 # ======= Part 3: British Transit ============

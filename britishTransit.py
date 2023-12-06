@@ -3,6 +3,7 @@ import sevens_stuff
 import csv
 from itertools import islice
 import timeit
+import matplotlib.pyplot as pl
 
 # Replace 'your_file.csv' with the actual path to your CSV file
 G = DirectedWeightedGraph()
@@ -39,24 +40,6 @@ def makeHeuristic(s):
     return heuristic
     
 
-# h = makeHeuristic(162)
-# # sevens_stuff.aStar(G,1,73,h)
-# start = timeit.default_timer()
-# pred, path = sevens_stuff.aStar(G,162,218,h)
-# end = timeit.default_timer()
-# print("astar time:",end-start)
-# # print("Predecessor Dictionary:", pred)
-# print("Shortest Path:", path)
-# stops = []
-# for station in path:
-#     stops.append(stationNames[station])
-# print(stops)
-# start = timeit.default_timer()
-# sevens_stuff.dijkstra(G, 24)
-# end = timeit.default_timer()
-# print("dijkstra time:",end-start)
-# # print(stationNames)
-
 
 def astarDijkstraTimeComparer(source, destination):
     print("===============================================")
@@ -80,4 +63,41 @@ def astarDijkstraTimeComparer(source, destination):
     print(path)
     print("Path Taken:", itermediateStations)
 
-astarDijkstraTimeComparer(162,218)
+# astarDijkstraTimeComparer(162,218)
+
+
+def part3Experiment1():
+    astarTimes, djikstraTimes = [], []
+    for node1 in stationCoordinates:
+        print("Current Node:",node1)
+        
+        currentAStarTime, currentDjikstraTime = 0,0
+        for node2 in stationCoordinates:
+            if node1 != node2:
+                # Timing A*
+                h = makeHeuristic(node1)
+                start = timeit.default_timer()
+                pred, path = sevens_stuff.aStar(G,node1,node2,h)
+                end = timeit.default_timer()
+                currentAStarTime += (end-start)
+
+                # Timing Djikstra
+                start1 = timeit.default_timer()
+                sevens_stuff.dijkstra(G, node1)
+                end1 = timeit.default_timer()
+                currentDjikstraTime += (end1-start1)
+        djikstraTimes.append(currentDjikstraTime)
+        astarTimes.append(currentAStarTime)
+    
+    # Plotting Results
+    pl.plot(djikstraTimes, label="Dijkstra's")
+    pl.plot(astarTimes, label="A*")
+
+    pl.xlabel("Station ID")
+    pl.ylabel("Time")
+    pl.title("Shortest Pair Path for every station")
+
+    pl.legend(loc=1)
+    pl.show()
+
+part3Experiment1()
