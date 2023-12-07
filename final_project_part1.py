@@ -138,19 +138,37 @@ def create_random_complete_graph(n,upper):
             if i != j:
                 G.add_edge(i,j,random.randint(1,upper))
     return G
-def new_create_random_complete_graph(node_num, edge_num, upper):
-    G = DirectedWeightedGraph()
-    for i in range(node_num):
-        G.add_node(i)
-    for i in range(node_num):
-        for j in range(edge_num):
-            dest = random.randint(edge_num)
-            if i != dest:
-                rand = random.randint(1, upper)
-                G.add_edge(i, dest, rand)
-                print(i, ", ", dest, ", ", rand)
-    return G
+def new_create_random_complete_graph(n, upper, edges):
+    if edges < n - 1:
+        raise Exception("E has to be >= V - 1")
 
+    G = DirectedWeightedGraph()
+
+    dangling = []
+    connected = []
+
+    for i in range(n):
+        G.add_node(i)
+        dangling.append(i)
+
+    connected.append(dangling.pop())
+
+    for i in range(edges):
+        if (len(dangling) != 0):
+            start = connected[random.randint(0, len(connected) - 1)]
+            end = dangling.pop(random.randint(0, len(dangling) - 1))
+            G.add_edge(start, end, random.randint(1, upper))
+            connected.append(end)
+
+        else:
+
+            start = random.randint(0, n - 1)
+            end = random.randint(0, n - 1)
+            while start == end or G.are_connected(start, end):
+                end = random.randint(0, n - 1)
+            G.add_edge(start, end, random.randint(1, upper))
+
+    return G
 
 #Assumes G represents its nodes as integers 0,1,...,(n-1)
 def mystery(G):
@@ -174,7 +192,7 @@ def init_d(G):
     return d
 
 
-def experiment1():
+def experiment1():#testing runtime while increasing the number of nodes
     dijkstraTimes = []
     bellmanTimes = []
     # Running the experiment on Dikstra's and bellman for number of nodes
@@ -198,35 +216,38 @@ def experiment1():
     plt.legend(loc=1)
     plt.show()
 
-def experiment2(node_num, max_ratio):
-    dijkstraTimes = []
-    bellmanTimes = []
+
+
+def experiment2(node_num, max_ratio):#testing runtime while the density of the graph increases
+    dijkstra_times = []
+    bellman_times = []
 
     print("doning")
-    for i in range(max_ratio):
-        edge_num = i
+    for i in range(1, max_ratio):
+        edge_num = i*node_num
         upper = 25
-        G = new_create_random_complete_graph(node_num, edge_num, upper)
+        print(edge_num)
+        print(node_num)
+        # G = new_create_random_complete_graph(node_num, edge_num, upper)
+        G = new_create_random_complete_graph(node_num, upper, edge_num)
+        start = timeit.default_timer()
+        dijkstra_dist = dijkstra(G, 0)
+        dijkstra_times.append(timeit.default_timer() - start)
 
         start = timeit.default_timer()
-        dijkstraDist = dijkstra(G, 0)
-        dijkstraTimes.append(timeit.default_timer() - start)
+        bellman_dist = bellman_ford(G, 0)
+        bellman_times.append(timeit.default_timer() - start)
 
-        start = timeit.default_timer()
-        bellmanDist = bellman_ford(G, 0)
-        bellmanTimes.append(timeit.default_timer() - start)
-
-    plt.plot(dijkstraTimes, label="Dijkstra Times")
-    plt.plot(bellmanTimes, label="Bellman Times")
-
+    plt.plot(dijkstra_times, label="Dijkstra Times")
+    plt.plot(bellman_times, label="Bellman Times")
+    print('reached')
     plt.xlabel('Edge to Node Ratio')
     plt.ylabel('Runtime')
     plt.title('Number of Nodes vs Runtime')
     plt.legend(loc=1)
     plt.show()
 
-
-def experiment3(approx_num):
+def experiment3(approx_num):#testing runtime while increasing the k-value
     dijkstraTimes = []
     bellmanTimes = []
 
@@ -248,13 +269,13 @@ def experiment3(approx_num):
     plt.plot(dijkstraTimes, label="Dijkstra Times")
     plt.plot(bellmanTimes, label="Bellman Times")
 
-    plt.xlabel('Edge to Node Ratio')
+    plt.xlabel('k-value')
     plt.ylabel('Runtime')
     plt.title('Number of Nodes vs Runtime')
     plt.legend(loc=1)
     plt.show()
 
-def experiment4(approx_num):
+def experiment4(approx_num):#testing accuracy of shortest path while changing the k-value
     dijkstraTotalDist = []
     bellmanTotalDist = []
 
@@ -279,5 +300,9 @@ def experiment4(approx_num):
     plt.title('Number of Nodes vs Total Shortest Path Distances of Dijkstra and Bellman')
     plt.legend(loc=1)
     plt.show()
+
+# experiment1()
+# experiment2(20,7)
+# experiment3(20)
 experiment4(50)
-# experiment2(30,30)
+
