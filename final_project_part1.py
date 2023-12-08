@@ -197,7 +197,7 @@ def experiment1():#testing runtime while increasing the number of nodes
     bellmanTimes = []
     # Running the experiment on Dikstra's and bellman for number of nodes
     print("doning")
-    for i in range(10, 30):
+    for i in range(1, 20):
         G = create_random_complete_graph(i, 25)
         start = timeit.default_timer()
         dijkstraDist = dijkstra(G, 0)
@@ -212,7 +212,7 @@ def experiment1():#testing runtime while increasing the number of nodes
 
     plt.xlabel('Number of nodes')
     plt.ylabel('Runtime')
-    plt.title('Number of Nodes vs Runtime')
+    plt.title('Experiment 1: Graph size vs Runtime')
     plt.legend(loc=1)
     plt.show()
 
@@ -243,7 +243,7 @@ def experiment2(node_num, max_ratio):#testing runtime while the density of the g
     print('reached')
     plt.xlabel('Edge to Node Ratio')
     plt.ylabel('Runtime')
-    plt.title('Number of Nodes vs Runtime')
+    plt.title('Experiment: Graph Density vs Runtime')
     plt.legend(loc=1)
     plt.show()
 
@@ -271,7 +271,7 @@ def experiment3(approx_num):#testing runtime while increasing the k-value
 
     plt.xlabel('k-value')
     plt.ylabel('Runtime')
-    plt.title('Number of Nodes vs Runtime')
+    plt.title('Experiment 3: Value of K vs Runtime')
     plt.legend(loc=1)
     plt.show()
 
@@ -295,14 +295,14 @@ def experiment4(approx_num):#testing accuracy of shortest path while changing th
     plt.plot(dijkstraTotalDist, label="Dijkstra Distances")
     plt.plot(bellmanTotalDist, label="Bellman Distances")
 
-    plt.xlabel('Edge to Node Ratio')
-    plt.ylabel('Distance')
-    plt.title('Number of Nodes vs Total Shortest Path Distances of Dijkstra and Bellman')
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Total Distance of Shortest Path')
+    plt.title('Accuracy of Dijkstra and Bellman Ford Algorithms')
     plt.legend(loc=1)
     plt.show()
 
 # experiment1()
-# experiment2(20,7)
+# experiment2(20,10)
 # experiment3(20)
 experiment4(50)
 

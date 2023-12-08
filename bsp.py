@@ -27,9 +27,9 @@ def bsp_value(L, m):
 
 
 def bsp_solution(L, m):
-    if len(L) - m == 2:
+    if len(L) - m == 1:
         return [L[0]]
-    elif len(L) - m < 2:
+    elif len(L) - m < 1:
         return []
     else:
         max_min_dist = bsp_value(L, m)
