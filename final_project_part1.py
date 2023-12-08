@@ -2,6 +2,7 @@ import min_heap
 import random
 import timeit
 import matplotlib.pyplot as plt
+import numpy as np
 
 class DirectedWeightedGraph:
 
@@ -301,8 +302,27 @@ def experiment4(approx_num):#testing accuracy of shortest path while changing th
     plt.legend(loc=1)
     plt.show()
 
+def experiment5():
+    mystery_times = []
+
+    # Running the experiment on Mystery Algorithm for different numbers of nodes
+    for i in range(1, 30):
+        G = create_random_complete_graph(i, 25)
+        start = timeit.default_timer()
+        mystery_dist = mystery(G)
+        mystery_times.append(timeit.default_timer() - start)
+
+    # Plotting in log-log scale using numpy
+    plt.loglog(range(1, 30), mystery_times, label="Mystery Algorithm Times")
+
+    plt.xlabel('Number of nodes (log scale)')
+    plt.ylabel('Runtime (log scale)')
+    plt.title('Experiment 5: Mystery Algorithm Graph size vs Runtime')
+    plt.legend(loc=1)
+    plt.show()
+
 # experiment1()
 # experiment2(20,10)
 # experiment3(20)
 experiment4(50)
-
+# experiment5()
