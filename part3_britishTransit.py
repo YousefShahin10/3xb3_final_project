@@ -1,11 +1,10 @@
-from sevens_stuff import DirectedWeightedGraph
-import sevens_stuff
 import csv
 from itertools import islice
 import timeit
 import matplotlib.pyplot as pl
+from final_project_part1 import DirectedWeightedGraph, dijkstra
+from part2_AStar import aStar
 
-# Replace 'your_file.csv' with the actual path to your CSV file
 G = DirectedWeightedGraph()
 stationCoordinates = {} #Stores the coordinates of each station
 stationNames = {} #Stores the name of each station
@@ -48,7 +47,7 @@ def astarDijkstraTimeComparer(source, destination):
     h = makeHeuristic(source)
 
     start = timeit.default_timer()
-    pred, path = sevens_stuff.aStar(G,source,destination,h)
+    pred, path = aStar(G,source,destination,h)
     end = timeit.default_timer()
     print("A* time:",end-start)
 
@@ -56,7 +55,7 @@ def astarDijkstraTimeComparer(source, destination):
         itermediateStations.append(stationNames[station])
     
     start = timeit.default_timer()
-    sevens_stuff.dijkstra(G, 24)
+    dijkstra(G, 24)
     end = timeit.default_timer()
 
     print("Dijkstra time:",end-start)
@@ -64,6 +63,8 @@ def astarDijkstraTimeComparer(source, destination):
     print("Path Taken:", itermediateStations)
 
 # astarDijkstraTimeComparer(162,218)
+
+# Experiment for shortest path pairs
 
 
 def part3Experiment1():
@@ -77,13 +78,13 @@ def part3Experiment1():
                 # Timing A*
                 h = makeHeuristic(node1)
                 start = timeit.default_timer()
-                pred, path = sevens_stuff.aStar(G,node1,node2,h)
+                pred, path = aStar(G,node1,node2,h)
                 end = timeit.default_timer()
                 currentAStarTime += (end-start)
 
                 # Timing Djikstra
                 start1 = timeit.default_timer()
-                sevens_stuff.dijkstra(G, node1)
+                dijkstra(G, node1)
                 end1 = timeit.default_timer()
                 currentDjikstraTime += (end1-start1)
         djikstraTimes.append(currentDjikstraTime)
@@ -100,4 +101,6 @@ def part3Experiment1():
     pl.legend(loc=1)
     pl.show()
 
+
+#uncomment the method below to run the experiment
 part3Experiment1()
