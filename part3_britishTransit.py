@@ -11,7 +11,7 @@ stationNames = {} #Stores the name of each station
 #stationCoordinates Format: {'202':['']}
 
 #Adding Nodes
-with open('3xb3_final_project\london_stations.csv', 'r') as file:
+with open('london_stations.csv', 'r') as file:
     csv_reader = csv.reader(file)
     for row in islice(csv_reader, 1, None):
         G.add_node(int(row[0]))
@@ -19,7 +19,7 @@ with open('3xb3_final_project\london_stations.csv', 'r') as file:
         stationNames[int(row[0])] = row[3]
 
 #Adding Edges
-with open('3xb3_final_project\london_connections.csv', 'r') as file:
+with open('london_connections.csv', 'r') as file:
     csv_reader = csv.reader(file)
     for row in islice(csv_reader, 1, None):
         x1,y1 = stationCoordinates[int(row[0])]
